@@ -1,6 +1,6 @@
 #!/bin/bash
 
-$MCJARNAME="minecraft_server.jar"
+$FORGEINSTALLERJARNAME="forge-installer.jar"
 $RAMSIZE="5GB"
 
 if [ "$EUID" -ne 0 ]
@@ -14,8 +14,11 @@ if ! [[ which java > /dev/null 2>&1; ]] then
     apt-get install default-jdk -y
 fi
 
-if [ ! -f $MCJARNAME ]
-    wget -O $MCJARNAME https://piston-data.mojang.com/v1/objects/f69c284232d7c7580bd89a5a4931c3581eae1378/server.jar
+if [ ! -f run.sh ]
+    wget -O $FORGEINSTALLER 
+    java -jar $FORGEINSTALLER --installServer
+    echo "-Xmx$RAMSIZE" > user_jvm_args.txt
+    chmod 755 run.sh
 fi
 
-java -Xmx$RAMSIZE -jar $MCJARNAME --nogui
+/bin/bash run.sh
